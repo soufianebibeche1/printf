@@ -27,15 +27,17 @@ int _printf(const char *format, ...)
 				putchar(va_arg(args, int));
 				break;
 			case 's':
-				for (str = va_arg(args, char *); str; str++)
-					putchar(*str);
+				str = va_arg(args, char *);
+				while (*str != '\0')
+				{
+    					putchar(*str);
+    					str++;
+				}
 				break;
-			
 			case '%':
 				putchar('%');
 				nb_printedchar++;
 				break;
-			
 			default:
 				putchar(*format);
 				break;
