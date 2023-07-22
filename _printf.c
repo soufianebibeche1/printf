@@ -12,45 +12,42 @@
 int _printf(const char *format, ...)
 {
 	va_list args;
-	int printed_chars = 0, i = 0;
+	int nb_printedchars = 0;
+	int i = 0;
 
 	va_start(args, format);
+
 	while (format && format[i])
 	{
 		if (format[i] == '%')
 		{
 			i++;
-			if (!format[i])
-				return (-1);
 			switch (format[i])
 			{
 				case 'c':
-					printed_chars += print_char(args);
+					nb_printedchars += print_char(args);
 					break;
 				case 's':
-					printed_chars += print_string(args);
-					break;
-				case 'd':
-				case 'i':
-					printed_chars += print_int(args);
+					nb_printedchars += print_string(args);
 					break;
 				case '%':
 					_putchar('%');
-					printed_chars++;
+					nb_printedchars++;
 					break;
 				default:
 					_putchar('%');
 					_putchar(format[i]);
-					printed_chars += 2;
+					nb_printedchars += 2;
+					break;
 			}
 		}
 		else
 		{
 			_putchar(format[i]);
-			printed_chars++;
+			nb_printedchars++;
 		}
 		i++;
 	}
 	va_end(args);
-	return (printed_chars);
+	return (nb_printedchars);
 }
