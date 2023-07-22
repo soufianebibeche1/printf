@@ -30,8 +30,8 @@ int _printf(const char *format, ...)
 				str = va_arg(args, char *);
 				while (*str != '\0')
 				{
-    					putchar(*str);
-    					str++;
+					putchar(*str);
+					str++;
 				}
 				break;
 			case '%':
