@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include "main.h"
 
@@ -10,8 +11,8 @@
  */
 int _printf(const char *format, ...)
 {
-	int c, nb_printedchar = 0;
 	char *str;
+	int nb_printedchar = 0;
 	va_list args;
 
 	va_start(args, format);
@@ -22,38 +23,24 @@ int _printf(const char *format, ...)
 			format++;
 			switch (*format)
 			{
-				case 'c':
-				{
-					c = va_arg(args, int);
-					putchar(c);
-					nb_printedchar++;
-					break;
-				}
-				case 's':
-				{
-					str = va_arg(args, char *);
-					while (*str)
-					{
-						putchar(*str);
-						str++;
-						nb_printedchar++;
-					}
-					break;
-				}
-				case '%':
-				{
-					putchar('%');
-					nb_printedchar++;
-					break;
-				}
-				default:
-				{
-					putchar('%');
-					putchar(*format);
-					nb_printedchar = nb_printedchar + 2;
-					break;
-				}
+			case 'c':
+				putchar(va_arg(args, int));
+				break;
+			case 's':
+				for (str = va_arg(args, char *); str; str++)
+					putchar(*str);
+				break;
+			
+			case '%':
+				putchar('%');
+				nb_printedchar++;
+				break;
+			
+			default:
+				putchar(*format);
+				break;
 			}
+			nb_printedchar++;
 		}
 		else
 		{
