@@ -3,55 +3,65 @@
 #include <stdarg.h>
 #include "main.h"
 
+/**
+ * _printf - custom printf
+ * @format: is a character string,
+ * Return: the number of characters printed.
+ */
 int _printf(const char *format, ...)
 {
-	int i, nb_printedchar = 0;
+	int c, nb_printedchar = 0;
+	char *str;
 	va_list args;
 
 	va_start(args, format);
-	while (format != NULL && format[i] != '\0')
+	while (*format != '\0')
 	{
-		if (format[i] == '%')
+		if (*format == '%')
 		{
-			i++;
-
-			if (format[i] == '\0')
-			{
-				va_end(args);
-				return (-1);
-			}
-
-			switch (format[i])
+			format++;
+			switch (*format)
 			{
 				case 'c':
-					nb_printedchar = nb_printedchar + print_char(args);
-					break;
-				case 's':
-					nb_printedchar = nb_printedchar + print_string(args);
-					break;
-				case 'd':
-				case 'i':
-					nb_printedchar = nb_printedchar + print_int(args);
-					break;
-				case '%':
-					_putchar('%');
+				{
+					c = va_arg(args, int);
+					putchar(c);
 					nb_printedchar++;
 					break;
+				}
+				case 's':
+				{
+					str = va_arg(args, char *);
+					while (*str)
+					{
+						putchar(*str);
+						str++;
+						nb_printedchar++;
+					}
+					break;
+				}
+				case '%':
+				{
+					putchar('%');
+					nb_printedchar++;
+					break;
+				}
 				default:
-					_putchar('%');
-					_putchar(format[i]);
+				{
+					putchar('%');
+					putchar(*format);
 					nb_printedchar = nb_printedchar + 2;
 					break;
+				}
 			}
 		}
 		else
 		{
-			_putchar(format[i]);
+			putchar(*format);
 			nb_printedchar++;
 		}
+		format++;
 	}
-
 	va_end(args);
-
 	return (nb_printedchar);
 }
