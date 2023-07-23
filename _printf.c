@@ -1,53 +1,69 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdarg.h>
 #include "main.h"
 
 /**
- * _printf - custom printf
- * @format: is a character string,
- * Return: the number of characters printed.
+ * recursive_printf - Recursive function to handle custom printf
+ * @format: The format string
+ * @args: The va_list containing the variable arguments
+ * Return: Number of characters printed
  */
+int recursive_printf(const char *format, va_list args)
+{
+    if (*format == '\0')
+        return 0;
+
+    if (*format != '%')
+    {
+        _putchar(*format);
+        return 1 + recursive_printf(format + 1, args);
+    }
+
+    format++;
+    switch (*format)
+    {
+        case 'c':
+        {
+            char ch = va_arg(args, int);
+            _putchar(ch);
+            return 1 + recursive_printf(format + 1, args);
+        }
+        case 's':
+        {
+            char *str = va_arg(args, char*);
+            int i = 0;
+
+            if (str == NULL)
+                str = "(null)";
+
+            while (str[i] != '\0')
+            {
+                _putchar(str[i]);
+                i++;
+            }
+
+            return i + recursive_printf(format + 1, args);
+        }
+        case '%':
+        {
+            _putchar('%');
+            return 1 + recursive_printf(format + 1, args);
+        }
+        default:
+        {
+            _putchar('%');
+            _putchar(*format);
+            return 2 + recursive_printf(format + 1, args);
+        }
+    }
+}
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int nb_printedchars = 0;
-	int i = 0;
+    va_list args;
+    int printed_chars = 0;
 
-	va_start(args, format);
+    va_start(args, format);
+    printed_chars = recursive_printf(format, args);
+    va_end(args);
 
-	while (format && format[i])
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			switch (format[i])
-			{
-				case 'c':
-					nb_printedchars += print_char(args);
-					break;
-				case 's':
-					nb_printedchars += print_string(args);
-					break;
-				case '%':
-					_putchar('%');
-					nb_printedchars++;
-					break;
-				default:
-					_putchar('%');
-					_putchar(format[i]);
-					nb_printedchars += 2;
-					break;
-			}
-		}
-		else
-		{
-			_putchar(format[i]);
-			nb_printedchars++;
-		}
-		i++;
-	}
-	va_end(args);
-	return (nb_printedchars);
+    return printed_chars;
 }
