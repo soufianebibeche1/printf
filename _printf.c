@@ -13,7 +13,6 @@ int convertX(const char *format, specifier_handler spec_lst[], va_list args)
 	int i, j, temp, nb_printedchars;
 
 	nb_printedchars = 0;
-	/* loop inside the string*/
 	for (i = 0; format[i] != '\0'; i++)
 	{
 		/* check if the character equal to % symbol of a specifier */
