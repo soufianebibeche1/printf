@@ -35,11 +35,11 @@ int recursive_printf(const char *format, va_list args)
 			i = 0;
 
 			if (str == NULL)
-				str = "(null)";
+					str = "(null)";
 			while (str[i] != '\0')
 			{
-				_putchar(str[i]);
-				i++;
+					_putchar(str[i]);
+					i++;
 			}
 			return (i + recursive_printf(format + 1, args));
 		}
@@ -56,7 +56,6 @@ int recursive_printf(const char *format, va_list args)
 		}
 	}
 }
-
 /**
  * _printf - Custom printf function that handles %c, %s, and %%
  * @format: The format string
@@ -73,3 +72,4 @@ int _printf(const char *format, ...)
 
 	return (printed_chars);
 }
+

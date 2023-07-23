@@ -21,9 +21,9 @@ int _putchar(char c)
  */
 int print_char(va_list args)
 {
-	char ch = va_arg(args, int);
+	char c = va_arg(args, int);
 
-	putchar(ch);
+	_putchar(c);
 	return (1);
 }
 
@@ -50,6 +50,17 @@ int print_string(va_list args)
 }
 
 /**
+ * print_percent - Prints the percent symbol
+ * @list: list of arguments
+ * Return: 1 for succes of printing.
+ */
+int print_percent(__attribute__((unused))va_list list)
+{
+	_putchar('%');
+	return (1);
+}
+
+/**
  * print_int - prints an integer argument
  * @args: the argument to print
  * Return: number of characters printed
@@ -58,6 +69,8 @@ int print_int(va_list args)
 {
 	int n = va_arg(args, int);
 	int temp, i, divisor, nb_numbers = 0;
+	int is_negative = 0;
+
 
 	if (n == 0)
 	{
@@ -66,12 +79,12 @@ int print_int(va_list args)
 	}
 	else if (n < 0)
 	{
-		_putchar('-');
-		nb_numbers++;
+		is_negative = 1;
 		n = -n;
 	}
 
 	temp = n;
+
 	while (temp != 0)
 	{
 		nb_numbers++;
@@ -81,9 +94,10 @@ int print_int(va_list args)
 	divisor = 1;
 
 	for (i = 1; i < nb_numbers; i++)
-	{
 		divisor *= 10;
-	}
+
+	if (is_negative == 1)
+		_putchar('-');
 
 	while (divisor > 0)
 	{
