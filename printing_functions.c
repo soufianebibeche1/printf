@@ -61,11 +61,11 @@ int print_percent(__attribute__((unused))va_list list)
 }
 
 /**
- * print_int - prints an integer argument
+ * print_number - prints an integer argument
  * @args: the argument to print
  * Return: number of characters printed
  */
-int print_int(va_list args)
+int print_number(va_list args)
 {
 	int n, divisor, len;
 	unsigned int num;
@@ -97,4 +97,17 @@ int print_int(va_list args)
 	}
 
 	return (len);
+}
+
+/**
+ * print_int - Prints the percent symbol
+ * @args: list of arguments
+ * Return: 1 for succes of printing.
+ */
+int print_int(va_list args)
+{
+	int nb_printedchars;
+
+	nb_printedchars = print_number(args);
+	return (nb_printedchars);
 }
