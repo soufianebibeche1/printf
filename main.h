@@ -3,6 +3,7 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 
 /*a structure that handle each specifier to the correct function */
