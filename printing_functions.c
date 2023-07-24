@@ -16,95 +16,97 @@ int _putchar(char c)
 
 /**
  * print_char - print an argument character
- * @args: the argument to print
+ * @ap: the argument to print
+ * @params: the parameters struct
+ *
  * Return: number of characters printed
  */
-int print_char(va_list args)
+int print_char(va_list ap, params_t *params)
 {
-	char c = va_arg(args, int);
+	char pad_char = ' ';
+	unsigned int pad = 1, sum = 0, ch = va_arg(ap, int);
 
-	_putchar(c);
-	return (1);
+	if (params->minus_flag)
+		sum += _putchar(ch);
+	while (pad++ < params->width)
+		sum += _putchar(pad_char);
+	if (!params->minus_flag)
+		sum += _putchar(ch);
+	return (sum);
 }
 
 /**
  * print_string - print a string argument
- * @args: the argument to print
+ * @ap: the argument to print
+ * @params: the parameters struct
+ *
  * Return: number of characters printed
  */
-int print_string(va_list args)
+int print_string(va_list ap, params_t *params)
 {
-	char *str = va_arg(args, char*);
-	int i = 0;
+	char *str = va_arg(ap, char *), pad_char = ' ';
+	unsigned int pad = 0, sum = 0, i = 0, j;
 
-	if (str == NULL)
-		str = "(null)";
+	(void)params;
+	switch ((int)(!str))
+		case 1:
+			str = NULL_STRING;
 
-	while (str[i] != '\0')
+	j = pad = _strlen(str);
+	if (params->precision < pad)
+		j = pad = params->precision;
+
+	if (params->minus_flag)
 	{
-		_putchar(str[i]);
-		i++;
+		if (params->precision != UINT_MAX)
+			for (i = 0; i < pad; i++)
+				sum += _putchar(*str++);
+		else
+			sum += _puts(str);
 	}
-
-	return (i);
+	while (j++ < params->width)
+		sum += _putchar(pad_char);
+	if (!params->minus_flag)
+	{
+		if (params->precision != UINT_MAX)
+			for (i = 0; i < pad; i++)
+				sum += _putchar(*str++);
+		else
+			sum += _puts(str);
+	}
+	return (sum);
 }
 
 /**
  * print_percent - Prints the percent symbol
- * @list: list of arguments
- * Return: 1 for succes of printing.
+ * @ap: arguments pointer
+ * @params: the parameters struct
+ *
+ * Return: number chars printed
  */
-int print_percent(__attribute__((unused))va_list list)
+int print_percent(va_list ap, params_t *params)
 {
-	_putchar('%');
-	return (1);
-}
+	(void)ap;
+	(void)params;
+	return (_putchar('%'));
+
 
 /**
  * print_int - prints an integer argument
- * @args: the argument to print
+ * @ap: the argument to print
+ * @params: teh paramiters struct
+ *
  * Return: number of characters printed
  */
-int print_int(va_list args)
+int print_int(va_list ap, params_t *params)
 {
-	int n = va_arg(args, int);
-	int temp, i, divisor, nb_numbers = 0;
-	int is_negative = 0;
+	long l;
 
-
-	if (n == 0)
-	{
-		_putchar('0');
-		return (1);
-	}
-	else if (n < 0)
-	{
-		is_negative = 1;
-		n = -n;
-	}
-
-	temp = n;
-
-	while (temp != 0)
-	{
-		nb_numbers++;
-		temp /= 10;
-	}
-
-	divisor = 1;
-
-	for (i = 1; i < nb_numbers; i++)
-		divisor *= 10;
-
-	if (is_negative == 1)
-		_putchar('-');
-
-	while (divisor > 0)
-	{
-		_putchar((n / divisor) + '0');
-		n %= divisor;
-		divisor /= 10;
-	}
-
-	return (nb_numbers);
+	if (params->l_modifier)
+		l = va_arg(ap, long);
+	else if (params->h_modifier)
+		l = (short int)va_arg(ap, int);
+	else
+		l = (int)va_arg(ap, int);
+	return (print_number(convert(l, 10, 0, params), params));
 }
