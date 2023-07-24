@@ -6,10 +6,17 @@
 #include <stdio.h>
 
 
-/*a structure that handle each specifier to the correct function */
-typedef struct {
-    char *specifier;
-    int (*printer)(va_list);
+/**
+ * struct specifier - struct token
+ *
+ * @specifier: format token
+ * @printer: the function associated
+ */
+
+typedef struct specifier
+{
+	char *specifier;
+	int (*printer)(va_list);
 } specifier_handler;
 
 /* writinng and printing functions functions */
