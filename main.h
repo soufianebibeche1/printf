@@ -21,10 +21,10 @@ typedef struct specifier
 
 /* writinng and printing functions functions */
 int _putchar(char c);
-int print_char(va_list ap, params_t *params);
-int print_string(va_list ap, params_t *params);
-int print_percent(va_list ap, params_t *params);
-int print_int(va_list ap, params_t *params);
+int print_char(va_list args);
+int print_string(va_list args);
+int print_percent(__attribute__((unused))va_list list);
+int print_int(va_list args);
 
 /* format specifiers */
 int convertX(const char *format, specifier_handler spec_lst[], va_list args);
