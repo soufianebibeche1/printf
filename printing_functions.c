@@ -65,46 +65,4 @@ int print_percent(__attribute__((unused))va_list list)
  * @args: the argument to print
  * Return: number of characters printed
  */
-int print_int(va_list args)
-{
-	int n = va_arg(args, int);
-	int temp, i, divisor, nb_numbers = 0;
-	int is_negative = 0;
 
-
-	if (n == 0)
-	{
-		_putchar('0');
-		return (1);
-	}
-	else if (n < 0)
-	{
-		is_negative = 1;
-		n = -n;
-	}
-
-	temp = n;
-
-	while (temp != 0)
-	{
-		nb_numbers++;
-		temp /= 10;
-	}
-
-	divisor = 1;
-
-	for (i = 1; i < nb_numbers; i++)
-		divisor *= 10;
-
-	if (is_negative == 1)
-		_putchar('-');
-
-	while (divisor > 0)
-	{
-		_putchar((n / divisor) + '0');
-		n %= divisor;
-		divisor /= 10;
-	}
-
-	return (nb_numbers);
-}
