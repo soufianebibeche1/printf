@@ -1,113 +1,132 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdarg.h>
 #include "main.h"
 
 /**
- * _putchar - print character
- * @c: a character to print
- * Return: the number of bytes that were successfully written
+ * print_char - prints character
+ * @ap: argument pointer
+ * @params: the parameters struct
+ *
+ * Return: number chars printed
  */
-int _putchar(char c)
+int print_char(va_list ap, params_t *params)
 {
-	return (write(1, &c, 1));
+	char pad_char = ' ';
+	unsigned int pad = 1, sum = 0, ch = va_arg(ap, int);
+
+	if (params->minus_flag)
+		sum += _putchar(ch);
+	while (pad++ < params->width)
+		sum += _putchar(pad_char);
+	if (!params->minus_flag)
+		sum += _putchar(ch);
+	return (sum);
 }
 
 /**
- * print_char - print an argument character
- * @args: the argument to print
- * Return: number of characters printed
+ * print_int - prints integer
+ * @ap: argument pointer
+ * @params: the parameters struct
+ *
+ * Return: number chars printed
  */
-int print_char(va_list args)
+int print_int(va_list ap, params_t *params)
 {
-	char c = va_arg(args, int);
+	long l;
 
-	_putchar(c);
-	return (1);
-}
-
-/**
- * print_string - print a string argument
- * @args: the argument to print
- * Return: number of characters printed
- */
-int print_string(va_list args)
-{
-	char *str = va_arg(args, char*);
-	int i = 0;
-
-	if (str == NULL)
-		str = "(null)";
-
-	while (str[i] != '\0')
-	{
-		_putchar(str[i]);
-		i++;
-	}
-
-	return (i);
-}
-
-/**
- * print_percent - Prints the percent symbol
- * @list: list of arguments
- * Return: 1 for succes of printing.
- */
-int print_percent(__attribute__((unused))va_list list)
-{
-	_putchar('%');
-	return (1);
-}
-
-/**
- * print_number - prints an integer argument
- * @args: the argument to print
- * Return: number of characters printed
- */
-int print_number(va_list args)
-{
-	int n, divisor, len;
-	unsigned int num;
-
-	n  = va_arg(args, int);
-	divisor = 1;
-	len = 0;
-
-	if (n < 0)
-	{
-		len = len * _putchar('-');
-		num = n * -1;
-	}
+	if (params->l_modifier)
+		l = va_arg(ap, long);
+	else if (params->h_modifier)
+		l = (short int)va_arg(ap, int);
 	else
-	{
-		num = n;
-	}
-
-	while (num / divisor > 9)
-	{
-		divisor = divisor * 10;
-	}
-
-	while (divisor != 0)
-	{
-		len = len + _putchar('0' + num / divisor);
-		num = num % divisor;
-		divisor = divisor / 10;
-	}
-
-	return (len);
+		l = (int)va_arg(ap, int);
+	return (print_number(convert(l, 10, 0, params), params));
 }
 
 /**
- * print_int - Prints the percent symbol
- * @args: list of arguments
- * Return: 1 for succes of printing.
+ * print_string - prints string
+ * @ap: argument pointer
+ * @params: the parameters struct
+ *
+ * Return: number chars printed
  */
-int print_int(va_list args)
+int print_string(va_list ap, params_t *params)
 {
-	int nb_printedchars;
+	char *str = va_arg(ap, char *), pad_char = ' ';
+	unsigned int pad = 0, sum = 0, i = 0, j;
 
-	nb_printedchars = print_number(args);
-	return (nb_printedchars);
+	(void)params;
+	switch ((int)(!str))
+		case 1:
+			str = NULL_STRING;
+
+	j = pad = _strlen(str);
+	if (params->precision < pad)
+		j = pad = params->precision;
+
+	if (params->minus_flag)
+	{
+		if (params->precision != UINT_MAX)
+			for (i = 0; i < pad; i++)
+				sum += _putchar(*str++);
+		else
+			sum += _puts(str);
+	}
+	while (j++ < params->width)
+		sum += _putchar(pad_char);
+	if (!params->minus_flag)
+	{
+		if (params->precision != UINT_MAX)
+			for (i = 0; i < pad; i++)
+				sum += _putchar(*str++);
+		else
+			sum += _puts(str);
+	}
+	return (sum);
+}
+
+/**
+ * print_percent - prints string
+ * @ap: argument pointer
+ * @params: the parameters struct
+ *
+ * Return: number chars printed
+ */
+int print_percent(va_list ap, params_t *params)
+{
+	(void)ap;
+	(void)params;
+	return (_putchar('%'));
+}
+
+/**
+ * print_S - custom format specifier
+ * @ap: argument pointer
+ * @params: the parameters struct
+ *
+ * Return: number chars printed
+ */
+int print_S(va_list ap, params_t *params)
+{
+	char *str = va_arg(ap, char *);
+	char *hex;
+	int sum = 0;
+
+	if ((int)(!str))
+		return (_puts(NULL_STRING));
+	for (; *str; str++)
+	{
+		if ((*str > 0 && *str < 32) || *str >= 127)
+		{
+			sum += _putchar('\\');
+			sum += _putchar('x');
+			hex = convert(*str, 16, 0, params);
+			if (!hex[1])
+				sum += _putchar('0');
+			sum += _puts(hex);
+		}
+		else
+		{
+			sum += _putchar(*str);
+		}
+	}
+	return (sum);
 }
