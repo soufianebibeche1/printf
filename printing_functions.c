@@ -61,50 +61,53 @@ int print_percent(__attribute__((unused))va_list list)
 }
 
 /**
- * print_int - prints an integer argument
+ * print_number - prints an integer argument
  * @args: the argument to print
  * Return: number of characters printed
  */
+int print_number(va_list args)
+{
+	int n, divisor, len;
+	unsigned int num;
+
+	n  = va_arg(args, int);
+	divisor = 1;
+	len = 0;
+
+	if (n < 0)
+	{
+		len = len * _putchar('-');
+		num = n * -1;
+	}
+	else
+	{
+		num = n;
+	}
+
+	while (num / divisor > 9)
+	{
+		divisor = divisor * 10;
+	}
+
+	while (divisor != 0)
+	{
+		len = len + _putchar('0' + num / divisor);
+		num = num % divisor;
+		divisor = divisor / 10;
+	}
+
+	return (len);
+}
+
+/**
+ * print_int - Prints the percent symbol
+ * @args: list of arguments
+ * Return: 1 for succes of printing.
+ */
 int print_int(va_list args)
 {
-	int n = va_arg(args, int);
-	int temp, i, divisor, nb_numbers = 0;
-	int is_negative = 0;
+	int nb_printedchars;
 
-
-	if (n == 0)
-	{
-		_putchar('0');
-		return (1);
-	}
-	else if (n < 0)
-	{
-		is_negative = 1;
-		n = -n;
-	}
-
-	temp = n;
-
-	while (temp != 0)
-	{
-		nb_numbers++;
-		temp /= 10;
-	}
-
-	divisor = 1;
-
-	for (i = 1; i < nb_numbers; i++)
-		divisor *= 10;
-
-	if (is_negative == 1)
-		_putchar('-');
-
-	while (divisor > 0)
-	{
-		_putchar((n / divisor) + '0');
-		n %= divisor;
-		divisor /= 10;
-	}
-
-	return (nb_numbers);
+	nb_printedchars = print_number(args);
+	return (nb_printedchars);
 }
