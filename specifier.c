@@ -31,13 +31,6 @@ int (*get_specifier(char *s))(va_list ap, params_t *params)
 	{
 		if (*s == specifiers[i].specifier[0])
 		{
-			if (specifiers[i].has_precision)
-			{
-				if (*(s+1) == '.')
-				{
-					specifiers[i].precision = atoi(s+2);
-				}
-			}
 			return (specifiers[i].f);
 		}
 		i++;
